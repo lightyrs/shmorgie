@@ -13,6 +13,9 @@ gem 'pg'
 gem 'puma'
 gem 'simple_form'
 gem 'octokit'
+gem 'sidekiq'
+gem 'whenever'
+gem 'protected_attributes'
 
 group :development, :test do
   gem 'factory_girl_rails'
