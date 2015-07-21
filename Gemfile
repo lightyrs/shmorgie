@@ -12,7 +12,7 @@ gem 'omniauth-github'
 gem 'pg'
 gem 'puma'
 gem 'simple_form'
-gem 'github_api'
+gem 'octokit'
 
 group :development, :test do
   gem 'factory_girl_rails'
@@ -23,6 +23,8 @@ group :development, :test do
   gem 'rubocop'
   gem 'byebug'
   gem 'spring'
+  gem 'awesome_print'
+  gem 'colored'
 end
 
 group :development do
