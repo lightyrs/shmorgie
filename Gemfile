@@ -20,6 +20,7 @@ gem 'whenever'
 gem 'protected_attributes'
 
 group :development, :test do
+  gem 'leader', git: 'https://github.com/halo/leader.git', require: false
   gem 'dotenv-rails'
   gem 'factory_girl_rails'
   gem 'faker'
