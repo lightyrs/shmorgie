@@ -32,6 +32,7 @@ class Github::CommitWatcher
   end
 
   def all_commits_since
-    Octokit.commits("#{@user}/#{@repo}", @branch, since: @since.iso8601)
+    commits = Octokit.commits("#{@user}/#{@repo}", @branch, since: @since.iso8601)
+    commits.sort_by { |commit| commit.commit.author.date }
   end
 end
