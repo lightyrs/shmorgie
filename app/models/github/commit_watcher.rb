@@ -3,6 +3,7 @@ class Github::CommitWatcher
   attr_accessor :user, :repo, :branch, :since
 
   def initialize(options = {})
+    @client = Octokit::Client.new(access_token: Rails.application.secrets.github_token)
     @user   = options[:user]
     @repo   = options[:repo]
     @branch = options[:branch] || 'master'
@@ -32,7 +33,7 @@ class Github::CommitWatcher
   end
 
   def all_commits_since
-    commits = Octokit.commits("#{@user}/#{@repo}", @branch, since: @since.iso8601)
+    commits = @client.commits("#{@user}/#{@repo}", @branch, since: @since.iso8601)
     commits.sort_by { |commit| commit.commit.author.date }
   end
 end
