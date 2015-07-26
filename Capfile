@@ -10,7 +10,6 @@ require 'airbrussh/capistrano'
 # Include capistrano plugin tasks
 require 'capistrano/rvm'
 require 'capistrano/bundler'
-require 'dotenv/capistrano'
 require 'capistrano/sidekiq'
 require 'capistrano/rails/assets'
 require 'capistrano/rails/migrations'
