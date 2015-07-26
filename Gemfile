@@ -20,6 +20,7 @@ gem 'sidekiq'
 gem 'whenever'
 gem 'protected_attributes'
 gem 'dotenv-rails'
+gem 'colored'
 
 group :development, :test do
   gem 'leader', git: 'https://github.com/halo/leader.git', require: false
@@ -32,7 +33,6 @@ group :development, :test do
   gem 'byebug'
   gem 'spring'
   gem 'awesome_print'
-  gem 'colored'
 end
 
 group :development do
