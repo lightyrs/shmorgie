@@ -19,10 +19,10 @@ gem 'unicorn', '~> 4.9.0'
 gem 'sidekiq'
 gem 'whenever'
 gem 'protected_attributes'
+gem 'dotenv-rails'
 
 group :development, :test do
   gem 'leader', git: 'https://github.com/halo/leader.git', require: false
-  gem 'dotenv-rails'
   gem 'factory_girl_rails'
   gem 'faker'
   gem 'pry-rails'
