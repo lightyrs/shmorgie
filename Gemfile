@@ -15,6 +15,7 @@ gem 'puma'
 gem 'simple_form'
 gem 'octokit'
 gem 'twitter'
+gem 'unicorn', '~> 4.9.0'
 gem 'sidekiq'
 gem 'whenever'
 gem 'protected_attributes'
@@ -37,6 +38,12 @@ end
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'airbrussh', '~> 0.6.0', require: false
+  gem 'capistrano', '~> 3.4.0', require: false
+  gem 'capistrano-rvm', '~> 0.1.2', require: false
+  gem 'capistrano-rails', '~> 1.1.3', require: false
+  gem 'capistrano-sidekiq', '~> 0.5.3', require: false
+  gem 'capistrano-git-submodule-strategy', git: 'https://github.com/ekho/capistrano-git-submodule-strategy.git', require: false
   gem 'foreman'
   gem 'html2haml'
   gem 'hub', require: nil
