@@ -7,5 +7,5 @@ Rails.application.routes.draw do
   get '/signout' => 'sessions#destroy', :as => :signout
   get '/auth/failure' => 'sessions#failure'
 
-  get '/receivers/github/:repo/:event' => 'receivers#github'
+  post '/receivers/github/:owner/:repo/:event' => 'receivers#github'
 end
