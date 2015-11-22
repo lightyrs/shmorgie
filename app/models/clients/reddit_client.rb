@@ -22,10 +22,11 @@ module Clients
 
     def get_hot_from_defaults
       unsorted = default_subreddits.map do |sub|
-        hot_links(sub)
-        sleep 3
+        hot_links(sub).tap do |hot|
+          sleep 3
+        end
       end
-      unsorted.flatten.sort_by { |link| link[:score] }
+      unsorted.flatten.sort_by { |link| link[:score] }.reverse!
     end
 
     # @option params [String] :after Return results after the given
