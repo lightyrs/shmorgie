@@ -27,6 +27,8 @@ module Clients
         end
       end
 
+      # TODO: Iterate through the first 10(?) groups and create tumblr posts
+
       unsorted.flatten
               .select { |link| link[:raw].fetch(:media, nil).present? && link[:score] > 0 }
               .sort_by { |link| link[:score] }
