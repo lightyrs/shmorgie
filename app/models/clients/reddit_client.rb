@@ -21,12 +21,17 @@ module Clients
     end
 
     def get_new_from_defaults
-      unsorted = default_subreddits.map do |sub|
+      unsorted = default_subreddits.first(2).map do |sub|
         new_links(sub).tap do |hot|
           sleep 3
         end
       end
-      sorted = unsorted.flatten.sort_by { |link| link[:score] }.reverse!
+
+      unsorted.flatten
+              .select { |link| link[:raw].fetch(:media, nil).present? && link[:score] > 0 }
+              .sort_by { |link| link[:score] }
+              .reverse!
+              .group_by { |link| link[:score] }
     end
 
     # @option params [String] :after Return results after the given
