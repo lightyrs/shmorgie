@@ -21,7 +21,7 @@ module Clients
     end
 
     def get_new_from_defaults
-      unsorted = default_subreddits.first(2).map do |sub|
+      unsorted = default_subreddits.map do |sub|
         new_links(sub).tap do |hot|
           sleep 3
         end
@@ -53,7 +53,10 @@ module Clients
     #   time period to consider when sorting.
 
     def new_links(subreddit = 'all', options = {})
-      { t: :hour, after: most_recent_submission.try(:fullname) }.merge!(options)
+      options = { t: :hour }.merge(options)
+      if most_recent_submission
+        options.merge!(after: most_recent_submission.try(:fullname))
+      end
       links = @client.get_new(subreddit, options)
       links.map { |link| format_link(link) }
     end
@@ -78,9 +81,9 @@ module Clients
 
     def post_link_to_tumblr(link)
       @tumblr_client ||= Clients::TumblrClient.new
-      if link.post_hint == "rich:video"
+      if link.post_type == "rich:video"
         @tumblr_client.make_video_post(url: link.url, caption: link.attribution, tags: link.tags)
-      elsif link.post_hint == "link"
+      elsif link.post_type == "link"
         @tumblr_client.make_audio_post(url: link.url, caption: link.attribution, tags: link.tags)
       else
         return
