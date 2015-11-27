@@ -27,13 +27,18 @@ module Clients
         end
       end
 
-      # TODO: Iterate through the first 10(?) groups and create tumblr posts
+      sorted = unsorted.flatten
+                       .select { |link| link[:media].present? && link[:score] > 0 }
+                       .sort_by { |link| link[:score] }
+                       .reverse!
 
-      unsorted.flatten
-              .select { |link| link[:raw].fetch(:media, nil).present? && link[:score] > 0 }
-              .sort_by { |link| link[:score] }
-              .reverse!
-              .group_by { |link| link[:score] }
+      sorted.first(10).each do |link|
+        begin
+          post_link_to_tumblr(link)
+        rescue StandardError => e
+          puts "#{e.class}: #{e.message}".inspect.red
+        end
+      end
     end
 
     # @option params [String] :after Return results after the given
@@ -48,7 +53,7 @@ module Clients
     #   time period to consider when sorting.
 
     def new_links(subreddit = 'all', options = {})
-      { t: :hour }.merge!(options)
+      { t: :hour, after: most_recent_submission.try(:fullname) }.merge!(options)
       links = @client.get_new(subreddit, options)
       links.map { |link| format_link(link) }
     end
@@ -67,20 +72,33 @@ module Clients
 
     private
 
+    def most_recent_submission
+      RedditSubmission.order("submitted_at_utc DESC").limit(1).take
+    end
+
     def post_link_to_tumblr(link)
       @tumblr_client ||= Clients::TumblrClient.new
-      @tumblr_client.make_video_post(url: link.url, caption: link.attribution, tags: link.tags)
+      if link.post_hint == "rich:video"
+        @tumblr_client.make_video_post(url: link.url, caption: link.attribution, tags: link.tags)
+      elsif link.post_hint == "link"
+        @tumblr_client.make_audio_post(url: link.url, caption: link.attribution, tags: link.tags)
+      else
+        return
+      end
+      RedditSubmission.create(fullname: link.fullname, submitted_at_utc: link.submitted_at_utc, reposted_at: DateTime.now)
     end
 
     def format_link(link)
       {
-        raw: link.to_h,
+        fullname: link.try(:name),
+        media: link.try(:media),
         score: link.score.try(:to_i),
         title: link.title,
         tags: [map_domain(link.try(:domain)), link.subreddit].compact,
         url: link.try(:url),
         attribution: "https://www.reddit.com/user/#{link.author} posted this to https://www.reddit.com#{link.permalink} at #{Time.at(link.created_utc).utc}",
-        post_type: link.try(:post_hint)
+        post_type: link.try(:post_hint),
+        submitted_at_utc: Time.at(link.created_utc).utc
       }
     end
 
