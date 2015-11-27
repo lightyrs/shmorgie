@@ -81,14 +81,14 @@ module Clients
 
     def post_link_to_tumblr(link)
       @tumblr_client ||= Clients::TumblrClient.new
-      if link.post_type == "rich:video"
-        @tumblr_client.make_video_post(url: link.url, caption: link.attribution, tags: link.tags)
-      elsif link.post_type == "link"
-        @tumblr_client.make_audio_post(url: link.url, caption: link.attribution, tags: link.tags)
+      if link["post_type"] == "rich:video"
+        @tumblr_client.make_video_post(url: link["url"], caption: link["attribution"], tags: link["tags"])
+      elsif link["post_type"] == "link"
+        @tumblr_client.make_audio_post(url: link["url"], caption: link["attribution"], tags: link["tags"])
       else
         return
       end
-      RedditSubmission.create(fullname: link.fullname, submitted_at_utc: link.submitted_at_utc, reposted_at: DateTime.now)
+      RedditSubmission.create(fullname: link["fullname"], submitted_at_utc: link["submitted_at_utc"], reposted_at: Time.now)
     end
 
     def format_link(link)
