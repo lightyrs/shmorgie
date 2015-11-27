@@ -147,8 +147,6 @@ module Clients
         "Flickr"
       when domain.match(/twitter\.com/i)
         "Twitter"
-      when domain.match(/reddit\.com/i)
-
       else
         domain
       end
