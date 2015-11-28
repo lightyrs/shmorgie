@@ -61,7 +61,7 @@ module Clients
     #   time period to consider when sorting.
 
     def new_links(subreddit = 'all', options = {})
-      if most_recent_submission
+      if most_recent_submission.present?
         options.merge!(after: most_recent_submission.try(:fullname))
       end
       links = @client.get_new(subreddit, options)
@@ -115,7 +115,7 @@ module Clients
         is_image_post: link.title.match(/\[image\]/i),
         score: link.score.try(:to_f),
         title: link.title,
-        tags: [map_domain(link.try(:domain)).try(:downcase), link.subreddit].compact,
+        tags: [map_domain(link.try(:domain)).try(:downcase), link.subreddit, "reddit"].compact,
         url: link.try(:url),
         attribution: "<a target='_blank' href='https://www.reddit.com/user/#{link.author}'>#{link.author}</a> posted this to <a target='_blank' href='https://www.reddit.com#{link.permalink}'>r/#{link.subreddit}</a> at #{Time.at(link.created_utc).utc}",
         post_type: link.try(:post_hint),
