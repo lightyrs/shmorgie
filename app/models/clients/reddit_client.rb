@@ -32,7 +32,9 @@ module Clients
       links.flatten!
 
       scores = links.map { |link| link[:score] }.compact
-      threshold = scores.percentile(90)
+      threshold = scores.percentile(95)
+
+      puts threshold.inspect.red
 
       links.each do |link|
         begin
