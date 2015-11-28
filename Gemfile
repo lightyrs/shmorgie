@@ -13,6 +13,7 @@ gem 'omniauth-github'
 gem 'pg'
 gem 'puma'
 gem 'simple_form'
+gem 'oj', platforms: :ruby
 gem 'redd', '~> 0.7'
 gem 'octokit'
 gem 'twitter'

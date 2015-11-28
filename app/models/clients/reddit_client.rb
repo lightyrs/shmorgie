@@ -19,7 +19,9 @@ module Clients
     end
 
     def default_subreddits
-      subreddits_from_multi('evilnight', 'truemusic').push('frisson')
+      truemusic   = subreddits_from_multi('evilnight', 'truemusic')
+      thefirehose = subreddits_from_multi('evilnight', 'thefirehose')
+      truemusic.concat(thefirehose).push('frisson').uniq
     end
 
     def get_new_from_defaults
@@ -59,7 +61,6 @@ module Clients
     #   time period to consider when sorting.
 
     def new_links(subreddit = 'all', options = {})
-      options = { t: :hour }.merge(options)
       if most_recent_submission
         options.merge!(after: most_recent_submission.try(:fullname))
       end
@@ -68,13 +69,18 @@ module Clients
     end
 
     def hot_links(subreddit = 'all', options = {})
-      { t: :hour }.merge!(options)
+      if most_recent_submission
+        options.merge!(after: most_recent_submission.try(:fullname))
+      end
       links = @client.get_hot(subreddit, options)
       links.map { |link| format_link(link) }
     end
 
     def top_links(subreddit = 'all', options = {})
       { t: :hour }.merge!(options)
+      if most_recent_submission
+        options.merge!(after: most_recent_submission.try(:fullname))
+      end
       links = @client.get_top(subreddit, options)
       links.map { |link| format_link(link) }
     end
