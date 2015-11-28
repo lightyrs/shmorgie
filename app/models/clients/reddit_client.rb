@@ -17,7 +17,7 @@ module Clients
     end
 
     def default_subreddits
-      subreddits_from_multi('evilnight', 'truemusic')
+      subreddits_from_multi('evilnight', 'truemusic').push('frisson')
     end
 
     def get_new_from_defaults
@@ -28,7 +28,7 @@ module Clients
       end
 
       sorted = unsorted.flatten
-                       .select { |link| link[:media].present? && link[:score] > 0 }
+                       .select { |link| (link[:media].present? || link[:is_image_post]) && link[:score] > 0 }
                        .sort_by { |link| link[:score] }
                        .reverse!
 
@@ -84,7 +84,11 @@ module Clients
       if link[:post_type] == "rich:video"
         @tumblr_client.make_video_post(url: link[:url], caption: link[:attribution], tags: link[:tags])
       elsif link[:post_type] == "link"
-        @tumblr_client.make_audio_post(url: link[:url], caption: link[:attribution], tags: link[:tags])
+        if link[:is_image_post]
+          @tumblr_client.make_photo_post(url: link[:url], image_url: link[:url], caption: link[:attribution], tags: link[:tags])
+        else
+          @tumblr_client.make_audio_post(url: link[:url], caption: link[:attribution], tags: link[:tags])
+        end
       else
         return
       end
@@ -94,12 +98,14 @@ module Clients
     def format_link(link)
       {
         fullname: link.try(:name),
+        subreddit: link.subreddit,
         media: link.try(:media),
+        is_image_post: link.title.match(/\[image\]/i),
         score: link.score.try(:to_i),
         title: link.title,
-        tags: [map_domain(link.try(:domain)), link.subreddit].compact,
+        tags: [map_domain(link.try(:domain)).try(:downcase), link.subreddit].compact,
         url: link.try(:url),
-        attribution: "https://www.reddit.com/user/#{link.author} posted this to https://www.reddit.com#{link.permalink} at #{Time.at(link.created_utc).utc}",
+        attribution: "<a target='_blank' href='https://www.reddit.com/user/#{link.author}'>#{link.author}</a> posted this to <a target='_blank' href='https://www.reddit.com#{link.permalink}'>r/#{link.subreddit}</a> at #{Time.at(link.created_utc).utc}",
         post_type: link.try(:post_hint),
         submitted_at_utc: Time.at(link.created_utc).utc
       }
