@@ -61,35 +61,22 @@ module Clients
     #   time period to consider when sorting.
 
     def new_links(subreddit = 'all', options = {})
-      if most_recent_submission.present?
-        options.merge!(after: most_recent_submission.try(:fullname))
-      end
       links = @client.get_new(subreddit, options)
       links.map { |link| format_link(link) }
     end
 
     def hot_links(subreddit = 'all', options = {})
-      if most_recent_submission
-        options.merge!(after: most_recent_submission.try(:fullname))
-      end
       links = @client.get_hot(subreddit, options)
       links.map { |link| format_link(link) }
     end
 
     def top_links(subreddit = 'all', options = {})
       { t: :hour }.merge!(options)
-      if most_recent_submission
-        options.merge!(after: most_recent_submission.try(:fullname))
-      end
       links = @client.get_top(subreddit, options)
       links.map { |link| format_link(link) }
     end
 
     private
-
-    def most_recent_submission
-      @most_recent_submission ||= RedditSubmission.order("submitted_at_utc DESC").limit(1).take
-    end
 
     def post_link_to_tumblr(link)
       @tumblr_client ||= Clients::TumblrClient.new
