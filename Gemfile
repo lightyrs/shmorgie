@@ -23,6 +23,7 @@ gem 'whenever'
 gem 'protected_attributes'
 gem 'dotenv-rails'
 gem 'colored'
+gem 'descriptive_statistics'
 
 group :development, :test do
   gem 'leader', git: 'https://github.com/halo/leader.git', require: false

@@ -1,3 +1,5 @@
+require 'descriptive_statistics'
+
 module Clients
   class RedditClient
 
@@ -21,20 +23,22 @@ module Clients
     end
 
     def get_new_from_defaults
-      unsorted = default_subreddits.map do |sub|
+      links = default_subreddits.map do |sub|
         new_links(sub).tap do |hot|
           sleep 3
         end
       end
 
-      sorted = unsorted.flatten
-                       .select { |link| (link[:media].present? || link[:is_image_post]) && link[:score] > 0 }
-                       .sort_by { |link| link[:score] }
-                       .reverse!
+      links.flatten!
 
-      sorted.first(10).each do |link|
+      scores = links.map { |link| link[:score] }.compact
+      threshold = scores.percentile(90)
+
+      links.each do |link|
         begin
-          post_link_to_tumblr(link)
+          if (link[:media].present? || link[:is_image_post]) && link[:score] >= threshold
+            post_link_to_tumblr(link)
+          end
         rescue StandardError => e
           puts "#{e.class}: #{e.message}".inspect.red
         end
@@ -76,7 +80,7 @@ module Clients
     private
 
     def most_recent_submission
-      RedditSubmission.order("submitted_at_utc DESC").limit(1).take
+      @most_recent_submission ||= RedditSubmission.order("submitted_at_utc DESC").limit(1).take
     end
 
     def post_link_to_tumblr(link)
@@ -101,7 +105,7 @@ module Clients
         subreddit: link.subreddit,
         media: link.try(:media),
         is_image_post: link.title.match(/\[image\]/i),
-        score: link.score.try(:to_i),
+        score: link.score.try(:to_f),
         title: link.title,
         tags: [map_domain(link.try(:domain)).try(:downcase), link.subreddit].compact,
         url: link.try(:url),

@@ -108,6 +108,7 @@ GEM
     connection_pool (2.2.0)
     database_cleaner (1.4.1)
     debug_inspector (0.0.2)
+    descriptive_statistics (2.5.1)
     diff-lcs (1.2.5)
     dotenv (2.0.2)
     dotenv-rails (2.0.2)
@@ -394,6 +395,7 @@ DEPENDENCIES
   coffee-rails (~> 4.1.0)
   colored
   database_cleaner
+  descriptive_statistics
   dotenv-rails
   factory_girl_rails
   faker
