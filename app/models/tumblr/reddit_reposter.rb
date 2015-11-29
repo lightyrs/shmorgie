@@ -49,20 +49,24 @@ class Tumblr::RedditReposter
     return false if RedditSubmission.exists?(fullname: submission[:fullname])
 
     if submission[:post_type] == "rich:video"
-      post_video_submission_to_tumblr(submission)
+      res = post_video_submission_to_tumblr(submission)
     elsif submission[:post_type] == "link"
-      post_audio_submission_to_tumblr(submission)
+      res = post_audio_submission_to_tumblr(submission)
     elsif submission[:post_type] == "link" && submission[:is_image_post]
-      post_photo_submission_to_tumblr(submission)
+      res = post_photo_submission_to_tumblr(submission)
     else
       return false
     end
 
-    RedditSubmission.create(
-      fullname: submission[:fullname],
-      submitted_at_utc: submission[:submitted_at_utc],
-      reposted_at: Time.now
-    )
+    if res && res['msg'] && res['msg'] == "Bad Request"
+      return false
+    else
+      RedditSubmission.create(
+        fullname: submission[:fullname],
+        submitted_at_utc: submission[:submitted_at_utc],
+        reposted_at: Time.now
+      )
+    end
   end
 
   def post_video_submission_to_tumblr(submission)
