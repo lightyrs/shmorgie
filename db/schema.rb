@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151129014427) do
+ActiveRecord::Schema.define(version: 20151129034549) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,7 @@ ActiveRecord::Schema.define(version: 20151129014427) do
     t.datetime "reposted_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "title"
   end
 
   add_index "reddit_submissions", ["fullname"], name: "index_reddit_submissions_on_fullname", unique: true, using: :btree

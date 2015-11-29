@@ -63,6 +63,7 @@ class Tumblr::RedditReposter
     else
       RedditSubmission.create(
         fullname: submission[:fullname],
+        title: submission[:title],
         submitted_at_utc: submission[:submitted_at_utc],
         reposted_at: Time.now
       )
