@@ -4,7 +4,7 @@ class ApiStat < ActiveRecord::Base
 
   validates :api, presence: true, uniqueness: true
 
-  def self.seed
+  def self.seed!
     create(api: "Tumblr", todays_post_limit: 250)
   end
 
