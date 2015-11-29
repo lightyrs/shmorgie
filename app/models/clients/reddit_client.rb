@@ -38,7 +38,7 @@ module Clients
 
       puts threshold.inspect.red
 
-      links.each do |link|
+      links.shuffle.each do |link|
         begin
           if (link[:media].present? || link[:is_image_post]) && link[:score] >= threshold
             post_link_to_tumblr(link)
