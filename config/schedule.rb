@@ -1,6 +1,6 @@
 set :output, { error: 'log/cron.stderr.log', standard: 'log/cron.stdout.log' }
 
-every 1.day, :at => '12:05 am' do
+every 1.day, :at => '12:02 am' do
   runner 'ApiStatResetter.perform_async'
 end
 

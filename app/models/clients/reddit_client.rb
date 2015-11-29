@@ -1,5 +1,3 @@
-require 'descriptive_statistics'
-
 module Clients
   class RedditClient
 
@@ -8,8 +6,6 @@ module Clients
     def initialize
       @client = Redd.it(:userless, Rails.application.secrets.reddit_client_id, Rails.application.secrets.reddit_client_secret)
       @client.authorize!
-      @tumblr_client ||= Clients::TumblrClient.new
-      @posted_count = 0
     end
 
     def multireddit(username, name)
@@ -20,106 +16,42 @@ module Clients
       multireddit(username, name).try(:subreddits)
     end
 
-    def default_subreddits
-      truemusic   = subreddits_from_multi('evilnight', 'truemusic')
-      thefirehose = subreddits_from_multi('evilnight', 'thefirehose')
-      truemusic.concat(thefirehose).push('frisson').uniq
+    def new_submissions(subreddit = 'all', options = {})
+      submissions = @client.get_new(subreddit, options)
+      submissions.map { |submission| format_submission(submission) }
     end
 
-    def get_new_from_defaults
-      links = default_subreddits.map do |sub|
-        new_links(sub).tap do |hot|
-          sleep 3
-        end
-      end
-
-      links.flatten!
-
-      scores = links.map { |link| link[:score] }.compact
-      threshold = scores.percentile(95)
-
-      puts threshold.inspect.red.on_white.underline
-
-      links.shuffle.each do |link|
-        begin
-          if postable?(link) && post_link_to_tumblr(link)
-            @tumblr_client.increment_todays_post_count!
-            @posted_count += 1
-          end
-        rescue StandardError => e
-          puts "#{e.class}: #{e.message}".inspect.red
-        end
-      end
+    def hot_submissions(subreddit = 'all', options = {})
+      submissions = @client.get_hot(subreddit, options)
+      submissions.map { |submission| format_submission(submission) }
     end
 
-    # @option params [String] :after Return results after the given
-    #   fullname.
-    # @option params [String :before Return results before the given
-    #   fullname.
-    # @option params [Integer] :count (0) The number of items already seen
-    #   in the listing.
-    # @option params [1..100] :limit (25) The maximum number of things to
-    #   return.
-    # @option params [:hour, :day, :week, :month, :year, :all] :t The
-    #   time period to consider when sorting.
-
-    def new_links(subreddit = 'all', options = {})
-      links = @client.get_new(subreddit, options)
-      links.map { |link| format_link(link) }
-    end
-
-    def hot_links(subreddit = 'all', options = {})
-      links = @client.get_hot(subreddit, options)
-      links.map { |link| format_link(link) }
-    end
-
-    def top_links(subreddit = 'all', options = {})
+    def top_submissions(subreddit = 'all', options = {})
       { t: :hour }.merge!(options)
-      links = @client.get_top(subreddit, options)
-      links.map { |link| format_link(link) }
+      submissions = @client.get_top(subreddit, options)
+      submissions.map { |submission| format_submission(submission) }
     end
 
     private
 
-    def post_link_to_tumblr(link)
-      if RedditSubmission.exists?(fullname: link[:fullname])
-        false
-      else
-        if link[:post_type] == "rich:video"
-          @tumblr_client.make_video_post(url: link[:url], caption: link[:attribution], tags: link[:tags])
-        elsif link[:post_type] == "link"
-          if link[:is_image_post]
-            @tumblr_client.make_photo_post(url: link[:url], image_url: link[:url], caption: link[:attribution], tags: link[:tags])
-          else
-            @tumblr_client.make_audio_post(url: link[:url], caption: link[:attribution], tags: link[:tags])
-          end
-        else
-          return false
-        end
-        RedditSubmission.create(fullname: link[:fullname], submitted_at_utc: link[:submitted_at_utc], reposted_at: Time.now)
-      end
-    end
-
-    def postable?(link)
-      @posted_count < 5 &&
-      (link[:media].present? || link[:is_image_post]) &&
-      link[:score] >= threshold
-    end
-
-    def format_link(link)
+    def format_submission(submission)
       {
-        fullname: link.try(:name),
-        subreddit: link.subreddit,
-        media: link.try(:media),
-        is_image_post: link.title.match(/\[image\]/i),
-        score: link.score.try(:to_f),
-        title: link.title,
-        tags: [map_domain(link.try(:domain)).try(:downcase), link.subreddit, "reddit"].compact,
-        url: link.try(:url),
-        attribution: "<a target='_blank' href='https://www.reddit.com/user/#{link.author}'>#{link.author}</a> posted this to <a target='_blank' href='https://www.reddit.com#{link.permalink}'>r/#{link.subreddit}</a> at #{Time.at(link.created_utc).utc}",
-        post_type: link.try(:post_hint),
-        submitted_at_utc: Time.at(link.created_utc).utc
+        fullname: submission.try(:name),
+        subreddit: submission.subreddit,
+        media: submission.try(:media),
+        is_image_post: submission.title.match(/\[image\]/i),
+        score: submission.score.try(:to_f),
+        title: submission.title,
+        tags: [map_domain(submission.try(:domain)).try(:downcase), submission.subreddit, "reddit"].compact,
+        url: submission.try(:url),
+        attribution: composed_attribution(submission),
+        post_type: submission.try(:post_hint),
+        submitted_at_utc: Time.at(submission.created_utc).utc
       }
+    end
+
+    def composed_attribution(submission)
+      "<a target='_blank' href='https://www.reddit.com/user/#{submission.author}'>#{submission.author}</a> posted this to <a target='_blank' href='https://www.reddit.com#{submission.permasubmission}'>r/#{submission.subreddit}</a> at #{Time.at(submission.created_utc).utc}"
     end
 
     def map_domain(domain = "")
