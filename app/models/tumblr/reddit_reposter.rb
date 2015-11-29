@@ -44,7 +44,7 @@ class Tumblr::RedditReposter
   end
 
   def postable?(submission)
-    @posted_count < 5 &&
+    @posted_count < 10 &&
     (submission[:media].present? || submission[:is_image_post]) &&
     submission[:score] >= @threshold
   end
