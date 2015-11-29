@@ -51,7 +51,7 @@ module Clients
     end
 
     def composed_attribution(submission)
-      "<a target='_blank' href='https://www.reddit.com/user/#{submission.author}'>#{submission.author}</a> posted this to <a target='_blank' href='https://www.reddit.com#{submission.permasubmission}'>r/#{submission.subreddit}</a> at #{Time.at(submission.created_utc).utc}"
+      "<a target='_blank' href='https://www.reddit.com/user/#{submission.author}'>#{submission.author}</a> posted this to <a target='_blank' href='https://www.reddit.com#{submission.permalink}'>r/#{submission.subreddit}</a> at #{Time.at(submission.created_utc).utc}"
     end
 
     def map_domain(domain = "")
