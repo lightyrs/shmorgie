@@ -27,5 +27,10 @@ module Clients
     def make_text_post(title:, body:)
       @client.text(@blog, { title: title, body: body, tags: tags.join(',') })
     end
+
+    def increment_todays_post_count!
+      @api_stat ||= ApiStat.find_by(api: "Tumblr")
+      @api_stat.increment(:todays_post_count, 1)
+    end
   end
 end

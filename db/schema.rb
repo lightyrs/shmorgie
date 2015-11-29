@@ -17,8 +17,9 @@ ActiveRecord::Schema.define(version: 20151129014427) do
   enable_extension "plpgsql"
 
   create_table "api_stats", force: :cascade do |t|
-    t.text     "api",               null: false
-    t.integer  "todays_post_count"
+    t.text     "api",                           null: false
+    t.integer  "todays_post_count", default: 0
+    t.integer  "todays_post_limit", default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end

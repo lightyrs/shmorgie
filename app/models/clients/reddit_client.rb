@@ -8,6 +8,7 @@ module Clients
     def initialize
       @client = Redd.it(:userless, Rails.application.secrets.reddit_client_id, Rails.application.secrets.reddit_client_secret)
       @client.authorize!
+      @tumblr_client ||= Clients::TumblrClient.new
     end
 
     def multireddit(username, name)
@@ -41,7 +42,7 @@ module Clients
       links.shuffle.each do |link|
         begin
           if (link[:media].present? || link[:is_image_post]) && link[:score] >= threshold
-            post_link_to_tumblr(link)
+            @tumblr_client.increment_todays_post_count! if post_link_to_tumblr(link)
           end
         rescue StandardError => e
           puts "#{e.class}: #{e.message}".inspect.red
@@ -79,8 +80,9 @@ module Clients
     private
 
     def post_link_to_tumblr(link)
-      @tumblr_client ||= Clients::TumblrClient.new
-      unless RedditSubmission.exists?(fullname: link[:fullname])
+      if RedditSubmission.exists?(fullname: link[:fullname])
+        false
+      else
         if link[:post_type] == "rich:video"
           @tumblr_client.make_video_post(url: link[:url], caption: link[:attribution], tags: link[:tags])
         elsif link[:post_type] == "link"
@@ -90,7 +92,7 @@ module Clients
             @tumblr_client.make_audio_post(url: link[:url], caption: link[:attribution], tags: link[:tags])
           end
         else
-          return
+          return false
         end
         RedditSubmission.create(fullname: link[:fullname], submitted_at_utc: link[:submitted_at_utc], reposted_at: Time.now)
       end
