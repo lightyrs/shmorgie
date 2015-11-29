@@ -9,7 +9,11 @@ class Tumblr::RedditReposter
   end
 
   def auto_repost!
-    new_submissions.flatten!.shuffle.each do |submission|
+    submissions = new_submissions.flatten!.shuffle
+
+    calculate_score_threshold(submissions)
+
+    submissions.each do |submission|
       begin
         if postable?(submission) && post_submission_to_tumblr(submission)
           @tumblr_client.increment_todays_post_count!
@@ -35,14 +39,14 @@ class Tumblr::RedditReposter
     end
   end
 
-  def score_threshold(submissions)
+  def calculate_score_threshold(submissions)
     @threshold ||= submissions.map { |submission| submission[:score] }.compact.percentile(95)
   end
 
   def postable?(submission)
     @posted_count < 5 &&
     (submission[:media].present? || submission[:is_image_post]) &&
-    submission[:score] >= score_threshold
+    submission[:score] >= @threshold
   end
 
   def post_submission_to_tumblr(submission)
