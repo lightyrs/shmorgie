@@ -1,6 +1,6 @@
 class ApiStat < ActiveRecord::Base
 
-  attr_accessible :todays_post_count, :todays_post_limit
+  attr_accessible :api, :todays_post_count, :todays_post_limit
 
   validates :api, presence: true, uniqueness: true
 
