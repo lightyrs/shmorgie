@@ -9,6 +9,7 @@ module Clients
       @client = Redd.it(:userless, Rails.application.secrets.reddit_client_id, Rails.application.secrets.reddit_client_secret)
       @client.authorize!
       @tumblr_client ||= Clients::TumblrClient.new
+      @posted_count = 0
     end
 
     def multireddit(username, name)
@@ -37,12 +38,13 @@ module Clients
       scores = links.map { |link| link[:score] }.compact
       threshold = scores.percentile(95)
 
-      puts threshold.inspect.red
+      puts threshold.inspect.red.on_white.underline
 
       links.shuffle.each do |link|
         begin
-          if (link[:media].present? || link[:is_image_post]) && link[:score] >= threshold
-            @tumblr_client.increment_todays_post_count! if post_link_to_tumblr(link)
+          if postable?(link) && post_link_to_tumblr(link)
+            @tumblr_client.increment_todays_post_count!
+            @posted_count += 1
           end
         rescue StandardError => e
           puts "#{e.class}: #{e.message}".inspect.red
@@ -96,6 +98,12 @@ module Clients
         end
         RedditSubmission.create(fullname: link[:fullname], submitted_at_utc: link[:submitted_at_utc], reposted_at: Time.now)
       end
+    end
+
+    def postable?(link)
+      @posted_count < 5 &&
+      (link[:media].present? || link[:is_image_post]) &&
+      link[:score] >= threshold
     end
 
     def format_link(link)
