@@ -11,10 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151127062234) do
+ActiveRecord::Schema.define(version: 20151129014427) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "api_stats", force: :cascade do |t|
+    t.text     "api",               null: false
+    t.integer  "todays_post_count"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "api_stats", ["api"], name: "index_api_stats_on_api", unique: true, using: :btree
 
   create_table "commits", force: :cascade do |t|
     t.text     "sha"
