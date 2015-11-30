@@ -28,7 +28,7 @@ class Tumblr::RedditReposter
   def subreddits
     truemusic   = @reddit_client.subreddits_from_multi('evilnight', 'truemusic')
     thefirehose = @reddit_client.subreddits_from_multi('evilnight', 'thefirehose')
-    truemusic.concat(thefirehose).push('frisson').uniq
+    truemusic.concat(thefirehose).push('Frisson').uniq
   end
 
   private
