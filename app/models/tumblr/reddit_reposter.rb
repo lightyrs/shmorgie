@@ -26,9 +26,8 @@ class Tumblr::RedditReposter
   end
 
   def subreddits
-    truemusic   = @reddit_client.subreddits_from_multi('evilnight', 'truemusic')
-    thefirehose = @reddit_client.subreddits_from_multi('evilnight', 'thefirehose')
-    truemusic.concat(thefirehose).push('Frisson').uniq
+    truemusic = @reddit_client.subreddits_from_multi('evilnight', 'truemusic')
+    truemusic.push('Frisson').uniq
   end
 
   private
@@ -54,10 +53,10 @@ class Tumblr::RedditReposter
 
     if submission[:post_type] == "rich:video"
       res = post_video_submission_to_tumblr(submission)
-    elsif submission[:post_type] == "link"
-      res = post_audio_submission_to_tumblr(submission)
     elsif submission[:post_type] == "link" && submission[:is_image_post]
       res = post_photo_submission_to_tumblr(submission)
+    elsif submission[:post_type] == "link"
+      res = post_audio_submission_to_tumblr(submission)
     else
       return false
     end
@@ -77,7 +76,7 @@ class Tumblr::RedditReposter
   def post_video_submission_to_tumblr(submission)
     @tumblr_client.make_video_post(
       url: submission[:url],
-      caption: submission[:attribution],
+      caption: submission[:caption],
       tags: submission[:tags]
     )
   end
@@ -85,7 +84,7 @@ class Tumblr::RedditReposter
   def post_audio_submission_to_tumblr(submission)
     @tumblr_client.make_audio_post(
       url: submission[:url],
-      caption: submission[:attribution],
+      caption: submission[:caption],
       tags: submission[:tags]
     )
   end
@@ -94,7 +93,7 @@ class Tumblr::RedditReposter
     @tumblr_client.make_photo_post(
       url: submission[:url],
       image_url: submission[:url],
-      caption: submission[:attribution],
+      caption: submission[:caption],
       tags: submission[:tags]
     )
   end

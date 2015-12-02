@@ -46,12 +46,17 @@ module Clients
         url: submission.try(:url),
         attribution: composed_attribution(submission),
         post_type: submission.try(:post_hint),
-        submitted_at_utc: Time.at(submission.created_utc).utc
+        submitted_at_utc: Time.at(submission.created_utc).utc,
+        caption: composed_caption(submission)
       }
     end
 
     def composed_attribution(submission)
       "<a target='_blank' href='https://www.reddit.com/user/#{submission.author}'>#{submission.author}</a> posted this to <a target='_blank' href='https://www.reddit.com#{submission.permalink}'>r/#{submission.subreddit}</a> at #{Time.at(submission.created_utc).utc}"
+    end
+
+    def composed_caption(submission)
+      "<span class='hn-caption-title'>#{submission.title}</span><span class='hn-caption-attribution'>#{composed_attribution(submission)}</span>"
     end
 
     def map_domain(domain = "")
