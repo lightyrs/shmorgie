@@ -56,7 +56,7 @@ module Clients
     end
 
     def composed_caption(submission)
-      "<span class='hn-caption-title'>#{submission.title}</span><span class='hn-caption-attribution'>#{composed_attribution(submission)}</span>"
+      "<h1 class='hn-caption-title'>#{submission.title}</h1><span class='hn-caption-attribution'>#{composed_attribution(submission)}</span>"
     end
 
     def map_domain(domain = "")
