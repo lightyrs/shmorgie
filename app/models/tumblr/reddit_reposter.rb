@@ -32,6 +32,25 @@ class Tumblr::RedditReposter
 
   private
 
+  def subreddit_weights
+    h = Hash.new(1.0)
+    h['PostHardcore'] = 0.9
+    h['progmetal'] = 0.8
+    h['Metalcore'] = 0.8
+    h['trueMusic'] = 1.1
+    h['listentothis'] = 1.1
+    h['Frisson'] = 1.2
+    h['futurebeats'] = 1.1
+    h
+  end
+
+  def weighted_score(submission)
+    subreddit = submission[:subreddit]
+    submission[:score].try(:to_f) * subreddit_weights["#{subreddit}"]
+  rescue StandardError => e
+    submission[:score]
+  end
+
   def new_submissions
     subreddits.map do |sub|
       @reddit_client.new_submissions(sub).tap { |submissions| sleep 3 }
@@ -39,13 +58,13 @@ class Tumblr::RedditReposter
   end
 
   def calculate_score_threshold(submissions)
-    @threshold ||= submissions.map { |submission| submission[:score] }.compact.percentile(95)
+    @threshold ||= submissions.map { |submission| weighted_score(submission) }.compact.percentile(95)
   end
 
   def postable?(submission)
     @posted_count < 10 &&
     (submission[:media].present? || submission[:is_image_post]) &&
-    submission[:score] >= @threshold
+    weighted_score(submission) >= @threshold
   end
 
   def post_submission_to_tumblr(submission)
