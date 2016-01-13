@@ -86,6 +86,7 @@ class Tumblr::RedditReposter
       RedditSubmission.create(
         fullname: submission[:fullname],
         title: submission[:title],
+        subreddit: submission[:subreddit],
         submitted_at_utc: submission[:submitted_at_utc],
         reposted_at: Time.now
       )
