@@ -34,11 +34,11 @@ class Tumblr::RedditReposter
 
   def subreddit_weights
     h = Hash.new(1.0)
-    h['PostHardcore'] = 0.9
-    h['progmetal'] = 0.8
-    h['Metalcore'] = 0.8
+    h['PostHardcore'] = 0.8
+    h['progmetal'] = 0.7
+    h['Metalcore'] = 0.75
     h['trueMusic'] = 1.1
-    h['listentothis'] = 1.1
+    h['listentothis'] = 1.2
     h['Frisson'] = 1.2
     h['futurebeats'] = 1.1
     h
