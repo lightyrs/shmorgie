@@ -34,19 +34,19 @@ class Tumblr::RedditReposter
 
   def subreddit_weights
     h = Hash.new(1.0)
-    h['PostHardcore'] = 0.8
-    h['progmetal'] = 0.7
-    h['Metalcore'] = 0.75
-    h['trueMusic'] = 1.1
+    h['posthardcore'] = 0.68
+    h['progmetal'] = 0.68
+    h['metalcore'] = 0.68
+    h['truemusic'] = 1.2
     h['listentothis'] = 1.2
-    h['Frisson'] = 1.2
+    h['frisson'] = 1.2
     h['futurebeats'] = 1.1
     h
   end
 
   def weighted_score(submission)
     subreddit = submission[:subreddit]
-    submission[:score].try(:to_f) * subreddit_weights["#{subreddit}"]
+    submission[:score].try(:to_f) * subreddit_weights["#{subreddit.try(:downcase)}"]
   rescue StandardError => e
     submission[:score]
   end
