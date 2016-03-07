@@ -15,7 +15,7 @@ gem 'pg'
 gem 'puma'
 gem 'simple_form'
 gem 'oj', platforms: :ruby
-gem 'redd', '~> 0.7', git: 'https://github.com/lemtzas/redd.git'
+gem 'redd', '~> 0.7'
 gem 'octokit'
 gem 'twitter'
 gem 'tumblr_client'
