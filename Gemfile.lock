@@ -11,6 +11,16 @@ GIT
   specs:
     leader (0.0.1)
 
+GIT
+  remote: https://github.com/lemtzas/redd.git
+  revision: c2c1d30d3ea7390aaa9ebcab7f9db82dc68d6b95
+  specs:
+    redd (0.7.8)
+      faraday (~> 0.9.1)
+      fastimage (~> 1.6.6)
+      hashie (~> 3.4.0)
+      multi_json (~> 1.10.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -146,7 +156,7 @@ GEM
       haml (>= 4.0.6, < 5.0)
       html2haml (>= 1.0.1)
       railties (>= 4.0.1)
-    hashie (3.4.2)
+    hashie (3.4.3)
     hitimes (1.2.2)
     html2haml (2.0.0)
       erubis (~> 2.7.0)
@@ -268,11 +278,6 @@ GEM
     rainbow (2.0.0)
     raindrops (0.15.0)
     rake (10.4.2)
-    redd (0.7.8)
-      faraday (~> 0.9.1)
-      fastimage (~> 1.6.6)
-      hashie (~> 3.4.0)
-      multi_json (~> 1.10.1)
     redis (3.2.1)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
@@ -427,7 +432,7 @@ DEPENDENCIES
   rails_apps_pages
   rails_apps_testing
   rails_layout
-  redd (~> 0.7)
+  redd (~> 0.7)!
   rspec-rails
   rubocop
   sass-rails (~> 5.0)
@@ -443,4 +448,4 @@ DEPENDENCIES
   whenever
 
 BUNDLED WITH
-   1.10.5
+   1.11.2
