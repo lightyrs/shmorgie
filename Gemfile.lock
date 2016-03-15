@@ -50,7 +50,7 @@ GEM
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     addressable (2.3.8)
-    airbrussh (0.6.0)
+    airbrussh (1.0.0)
       sshkit (>= 1.6.1, != 1.7.0)
     arel (6.0.2)
     ast (2.0.0)
@@ -77,23 +77,21 @@ GEM
     capistrano-bundler (1.1.4)
       capistrano (~> 3.1)
       sshkit (~> 1.2)
-    capistrano-rails (1.1.3)
+    capistrano-rails (1.1.6)
       capistrano (~> 3.1)
       capistrano-bundler (~> 1.1)
     capistrano-rvm (0.1.2)
       capistrano (~> 3.0)
       sshkit (~> 1.2)
-    capistrano-sidekiq (0.5.3)
+    capistrano-sidekiq (0.5.4)
       capistrano
-      sidekiq
+      sidekiq (>= 3.4)
     capybara (2.4.4)
       mime-types (>= 1.16)
       nokogiri (>= 1.3.3)
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    celluloid (0.16.0)
-      timers (~> 4.0.0)
     childprocess (0.5.6)
       ffi (~> 1.0, >= 1.0.11)
     chronic (0.10.2)
@@ -106,8 +104,8 @@ GEM
       execjs
     coffee-script-source (1.9.1.1)
     colored (1.2)
-    colorize (0.7.7)
     columnize (0.9.0)
+    concurrent-ruby (1.0.1)
     connection_pool (2.2.0)
     database_cleaner (1.4.1)
     debug_inspector (0.0.2)
@@ -147,7 +145,6 @@ GEM
       html2haml (>= 1.0.1)
       railties (>= 4.0.1)
     hashie (3.4.3)
-    hitimes (1.2.2)
     html2haml (2.0.0)
       erubis (~> 2.7.0)
       haml (~> 4.0.0)
@@ -184,7 +181,7 @@ GEM
     naught (1.0.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
-    net-ssh (2.9.2)
+    net-ssh (3.0.2)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
     oauth (0.4.7)
@@ -267,15 +264,13 @@ GEM
       thor (>= 0.18.1, < 2.0)
     rainbow (2.0.0)
     raindrops (0.15.0)
-    rake (10.4.2)
+    rake (11.1.1)
     redd (0.7.8)
       faraday (~> 0.9.1)
       fastimage (~> 1.6.6)
       hashie (~> 3.4.0)
       multi_json (~> 1.10.1)
-    redis (3.2.1)
-    redis-namespace (1.5.2)
-      redis (~> 3.0, >= 3.0.4)
+    redis (3.2.2)
     rspec-core (3.3.2)
       rspec-support (~> 3.3.0)
     rspec-expectations (3.3.1)
@@ -319,12 +314,10 @@ GEM
       rubyzip (~> 1.0)
       websocket (~> 1.0)
     sexp_processor (4.6.0)
-    sidekiq (3.4.2)
-      celluloid (~> 0.16.0)
+    sidekiq (4.1.1)
+      concurrent-ruby (~> 1.0)
       connection_pool (~> 2.2, >= 2.2.0)
-      json (~> 1.0)
       redis (~> 3.2, >= 3.2.1)
-      redis-namespace (~> 1.5, >= 1.5.2)
     simple_form (3.1.0)
       actionpack (~> 4.0)
       activemodel (~> 4.0)
@@ -339,15 +332,12 @@ GEM
       actionpack (>= 3.0)
       activesupport (>= 3.0)
       sprockets (>= 2.8, < 4.0)
-    sshkit (1.7.1)
-      colorize (>= 0.7.0)
+    sshkit (1.9.0)
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (1.4.1)
-    timers (4.0.1)
-      hitimes
     tumblr_client (0.8.5)
       faraday (~> 0.9.0)
       faraday_middleware (~> 0.9.0)
@@ -385,17 +375,17 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  airbrussh (~> 0.6.0)
+  airbrussh
   autoprefixer-rails
   awesome_print
   better_errors
   binding_of_caller
   byebug
-  capistrano (~> 3.4.0)
+  capistrano (~> 3.4)
   capistrano-git-submodule-strategy!
-  capistrano-rails (~> 1.1.3)
-  capistrano-rvm (~> 0.1.2)
-  capistrano-sidekiq (~> 0.5.3)
+  capistrano-rails
+  capistrano-rvm
+  capistrano-sidekiq
   capybara
   coffee-rails (~> 4.1.0)
   colored
@@ -427,7 +417,7 @@ DEPENDENCIES
   rails_apps_pages
   rails_apps_testing
   rails_layout
-  redd (~> 0.7)
+  redd
   rspec-rails
   rubocop
   sass-rails (~> 5.0)
@@ -439,7 +429,7 @@ DEPENDENCIES
   tumblr_client
   twitter
   uglifier (>= 1.3.0)
-  unicorn (~> 4.9.0)
+  unicorn
   whenever
 
 BUNDLED WITH

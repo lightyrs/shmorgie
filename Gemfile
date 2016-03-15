@@ -15,11 +15,10 @@ gem 'pg'
 gem 'puma'
 gem 'simple_form'
 gem 'oj', platforms: :ruby
-gem 'redd', '~> 0.7'
+gem 'redd'
 gem 'octokit'
 gem 'twitter'
 gem 'tumblr_client'
-gem 'unicorn', '~> 4.9.0'
 gem 'sidekiq'
 gem 'whenever'
 gem 'protected_attributes'
@@ -43,11 +42,11 @@ end
 group :development do
   gem 'better_errors'
   gem 'binding_of_caller'
-  gem 'airbrussh', '~> 0.6.0', require: false
-  gem 'capistrano', '~> 3.4.0', require: false
-  gem 'capistrano-rvm', '~> 0.1.2', require: false
-  gem 'capistrano-rails', '~> 1.1.3', require: false
-  gem 'capistrano-sidekiq', '~> 0.5.3', require: false
+  gem 'airbrussh', require: false
+  gem 'capistrano', '~> 3.4', require: false
+  gem 'capistrano-rvm', require: false
+  gem 'capistrano-rails', require: false
+  gem 'capistrano-sidekiq', require: false
   gem 'capistrano-git-submodule-strategy', git: 'https://github.com/ekho/capistrano-git-submodule-strategy.git', require: false
   gem 'foreman'
   gem 'html2haml'
@@ -67,5 +66,6 @@ group :test do
 end
 
 group :production do
+  gem 'unicorn'
   gem 'rails_12factor'
 end
