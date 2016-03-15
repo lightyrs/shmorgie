@@ -9,7 +9,7 @@ set :git_strategy,  Capistrano::Git::SubmoduleStrategy
 set :repo_url,      'git@github.com:lightyrs/shmorgie.git'
 set :deploy_to,     '/data/apps/shruti_box'
 
-set :sidekiq_concurrency, 5
+set :sidekiq_concurrency, 3
 
 set :ssh_options, {
   keepalive: true,

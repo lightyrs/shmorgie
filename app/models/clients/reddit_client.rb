@@ -17,6 +17,8 @@ module Clients
     end
 
     def new_submissions(subreddit = 'all', options = {})
+      Rails.logger.debug(subreddit)
+      puts subreddit.inspect.blue
       submissions = @client.get_new(subreddit, options)
       submissions.map { |submission| format_submission(submission) }
     end

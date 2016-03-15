@@ -83,6 +83,7 @@ class Tumblr::RedditReposter
     if res && res['msg'] && res['msg'] == "Bad Request"
       return false
     else
+      puts "Creating RedditSubmission #{submission.inspect}".green
       RedditSubmission.create(
         fullname: submission[:fullname],
         title: submission[:title],
