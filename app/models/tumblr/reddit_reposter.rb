@@ -53,7 +53,9 @@ class Tumblr::RedditReposter
 
   def new_submissions
     subreddits.map do |sub|
-      @reddit_client.new_submissions(sub).tap { |submissions| sleep 5 }
+      @reddit_client.new_submissions(sub).tap do |submissions|
+        sleep(5 + rand(8))
+      end
     end
   end
 
