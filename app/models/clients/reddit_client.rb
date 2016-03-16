@@ -21,6 +21,9 @@ module Clients
       puts subreddit.inspect.blue
       submissions = @client.get_new(subreddit, options)
       submissions.map { |submission| format_submission(submission) }
+    rescue Redd::Error::PermissionDenied => e
+      Rails.logger.debug "Rescued #{e.class}: #{e.message}"
+      []
     end
 
     def hot_submissions(subreddit = 'all', options = {})
