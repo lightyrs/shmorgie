@@ -26,7 +26,7 @@ class Tumblr::RedditReposter
   end
 
   def subreddits
-    truemusic = @reddit_client.subreddits_from_multi('evilnight', 'truemusic')
+    truemusic = @reddit_client.subreddits_from_multi('zippermouthface', 'truemusic')
     truemusic.push('Frisson').uniq
   end
 
