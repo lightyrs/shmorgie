@@ -27,7 +27,6 @@ gem 'colored'
 gem 'descriptive_statistics'
 
 group :development, :test do
-  gem 'leader', git: 'https://github.com/halo/leader.git', require: false
   gem 'factory_girl_rails'
   gem 'faker'
   gem 'pry-rails'
