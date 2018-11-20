@@ -11,13 +11,24 @@ html {
 
 body {
   background-color: #fff;
-  padding-top: 60px;
 }
 
 h1 {
   color: #f63939;
   font-family: "HouseSlant-Regular";
-  font-size: 12rem;
+  line-height: 1em;
+  -webkit-font-smoothing: antialiased;
+  @include poly-fluid-sizing('padding-top', (320px: 42px, 768px: 54px, 1280px: 66px, 1460px: 80px));
+  @include poly-fluid-sizing('font-size', (320px: 124px, 768px: 191px));
+}
+
+#hdn_outer {
+  max-width: 750px;
+}
+
+#hdn_inner {
+  max-width: 444px;
+  margin: 0 auto;
 }
 
 .mind-blown {
