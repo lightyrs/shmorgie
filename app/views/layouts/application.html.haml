@@ -1,13 +1,18 @@
 !!!
 %html{lang: "en"}
   %head
+    %script{async: "", src: "https://www.googletagmanager.com/gtag/js?id=UA-5741980-10"}
+    :javascript
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'UA-5741980-10');
     %meta{charset: "utf-8"}/
     %meta{content: "IE=edge", "http-equiv" => "X-UA-Compatible"}/
     %meta{content: "width=device-width, initial-scale=1, shrink-to-fit=no", name: "viewport"}/
     %title Harris Novick
     %meta{name: "description", content: "The personal homepage of Harris Novick. Writing software, writing songs, building products and companies, meeting new people and learning new skills; staying interested and vital above most else."}/
     = stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true
-    = javascript_include_tag "application", "data-turbolinks-track" => true
     = csrf_meta_tags
   %body
     #hdn_outer.container
