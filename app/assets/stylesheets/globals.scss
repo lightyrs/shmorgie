@@ -1,7 +1,10 @@
 @font-face {
-  font-family: "HouseSlant-Regular";
-  src: font-url("HouseSlant-Regular.woff2") format('woff2'),
-       font-url("HouseSlant-Regular.woff") format('woff');
+  font-family: 'House Slant';
+  src: local('HouseSlant-Regular'),
+      font-url('hinted-subset-HouseSlant-Regular.woff2') format('woff2'),
+      font-url('hinted-subset-HouseSlant-Regular.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
 }
 
 html {
@@ -15,7 +18,7 @@ body {
 
 h1 {
   color: #f63939;
-  font-family: "HouseSlant-Regular";
+  font-family: "House Slant";
   line-height: 1em;
   -webkit-font-smoothing: antialiased;
   @include poly-fluid-sizing('padding-top', (320px: 42px, 768px: 54px, 1280px: 66px, 1460px: 80px));
