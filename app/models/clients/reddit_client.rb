@@ -44,7 +44,7 @@ module Clients
         fullname: submission.try(:name),
         subreddit: submission.subreddit,
         media: submission.try(:media),
-        is_image_post: submission.title.match(/\[image\]/i),
+        is_image_post: is_image_post?(submission),
         score: submission.score.try(:to_f),
         title: submission.title,
         tags: [map_domain(submission.try(:domain)).try(:downcase), submission.subreddit, "reddit"].compact,
@@ -54,6 +54,10 @@ module Clients
         submitted_at_utc: Time.at(submission.created_utc).utc,
         caption: composed_caption(submission)
       }
+    end
+
+    def is_image_post?(submission)
+      submission.title.match(/\[image\]/i) || submission.media && submission.media.type.match(/imgur/i)
     end
 
     def composed_attribution(submission)
