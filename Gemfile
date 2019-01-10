@@ -25,6 +25,7 @@ gem 'whenever'
 gem 'protected_attributes'
 gem 'dotenv-rails'
 gem 'colored'
+gem 'awesome_print'
 gem 'descriptive_statistics'
 
 group :development, :test do
@@ -36,7 +37,6 @@ group :development, :test do
   gem 'rubocop'
   gem 'byebug'
   gem 'spring'
-  gem 'awesome_print'
 end
 
 group :development do

@@ -1,4 +1,5 @@
 require 'descriptive_statistics'
+require 'ap'
 
 class Tumblr::RedditReposter
 
@@ -9,10 +10,12 @@ class Tumblr::RedditReposter
   end
 
   def auto_repost!
-    @submissions = new_submissions.flatten!.shuffle
+    @submissions = new_submissions.flatten!
 
     normalize_scores
+    ap @normalized_scores
     calculate_score_threshold
+    ap @threshold
 
     @posts = @submissions.select do |submission|
       begin
@@ -28,7 +31,7 @@ class Tumblr::RedditReposter
     min = sub_counts.min
     max = sub_counts.max
     revised_counts = sub_counts.map do |sc|
-      normalize_value(sc, min, max, 1, 5).round
+      normalize_value(sc, min, max, 1, 10).round
     end
 
     revised_posts = []
@@ -82,7 +85,7 @@ class Tumblr::RedditReposter
   end
 
   def post_reddit_types
-    @posts.map { |post| post[:reddit_post_type] }.inject(Hash.new(0)) { |h, e| h[e] += 1 ; h }.sort_by{ |item| item[1] }.reverse
+    @posts.map { |post| post[:post_type] }.inject(Hash.new(0)) { |h, e| h[e] += 1 ; h }.sort_by{ |item| item[1] }.reverse
   end
 
   private
