@@ -118,7 +118,7 @@ class Tumblr::RedditReposter
     end
   end
 
-  def calculate_score_threshold(submissions)
+  def calculate_score_threshold
     @threshold ||= @normalized_scores.percentile(95)
   end
 
