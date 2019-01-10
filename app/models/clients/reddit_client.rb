@@ -57,7 +57,10 @@ module Clients
     end
 
     def is_image_post?(submission)
-      submission.title.match(/\[image\]/i) || submission.media && submission.media[:type].match(/imgur/i)
+      submission.title.match(/\[image\]/i) || submission.media && submission.media[:type] && submission.media[:type].match(/imgur/i)
+    rescue StandardError => e
+      Rails.logger.error("#{e.class}: #{e.message}")
+      false
     end
 
     def composed_attribution(submission)
