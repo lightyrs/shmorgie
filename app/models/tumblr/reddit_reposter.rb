@@ -28,24 +28,16 @@ class Tumblr::RedditReposter
 
     calculate_post_stats
 
-    sub_counts = @post_stats[:subreddits].map{|k,v| v}
-    min = sub_counts.min
-    max = sub_counts.max
-    revised_counts = sub_counts.map do |sc|
-      normalize_value(sc, min, max, 1, 5).round
-    end
-
     revised_posts = []
 
     puts @post_stats.inspect
-    puts revised_counts.inspect
 
     @post_stats[:subreddits].each.with_index do |(k,v), i|
       posts = @posts.select { |post|
         post[:subreddit] == k
       }.sort_by { |post|
         post[:score]
-      }.reverse.first(revised_counts[i])
+      }.reverse.first()
       revised_posts.push(posts)
     end
 
@@ -125,7 +117,7 @@ class Tumblr::RedditReposter
   end
 
   def calculate_score_threshold
-    @threshold ||= @normalized_scores.percentile(95)
+    @threshold ||= @normalized_scores.percentile(98)
   end
 
   def normalize_scores
@@ -135,11 +127,11 @@ class Tumblr::RedditReposter
     min = @score_stats.min
     max = @score_stats.max
     @submissions.each do |submission|
-      submission[:normalized_score] = normalize_value(submission[:score].try(:to_f), min, max, 1, 100)
+      submission[:normalized_score] = normalize_value(submission[:score].try(:to_f), min, max, 1, 50)
     end
 
     @normalized_scores = scores.map do |score|
-      normalize_value(score, min, max, 1, 100)
+      normalize_value(score, min, max, 1, 50)
     end
   end
 
