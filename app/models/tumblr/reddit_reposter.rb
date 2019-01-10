@@ -49,7 +49,9 @@ class Tumblr::RedditReposter
       revised_posts.push(posts)
     end
 
-    @posts = revised_posts.flatten
+    @posts = revised_posts.flatten.sort_by { |post| post[:normalized_score] }.reverse
+
+    ap @posts
 
     @posts.each do |post|
       begin
@@ -73,7 +75,7 @@ class Tumblr::RedditReposter
       subreddits: post_subreddits,
       hosts: post_hosts,
       types: post_reddit_types,
-      scores: @score_stats
+      scores: @normalized_scores
     }
   end
 
