@@ -132,6 +132,10 @@ class Tumblr::RedditReposter
     @score_stats = DescriptiveStatistics::Stats.new(scores)
     min = @score_stats.min
     max = @score_stats.max
+    @submissions.each do |submission|
+      submission[:normalized_score] = normalize_value(submission[:score].try(:to_f), min, max, 1, 100)
+    end
+
     @normalized_scores = scores.map do |score|
       normalize_value(score, min, max, 1, 100)
     end
@@ -146,7 +150,7 @@ class Tumblr::RedditReposter
   def postable?(submission)
     @posted_count < 10 &&
     (submission[:media].present? || submission[:is_image_post]) &&
-    submission[:score].try(:to_f) >= @threshold
+    submission[:normalized_score].try(:to_f) >= @threshold
   end
 
   def post_submission_to_tumblr(submission)
