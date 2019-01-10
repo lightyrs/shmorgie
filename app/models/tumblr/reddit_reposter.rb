@@ -150,7 +150,9 @@ class Tumblr::RedditReposter
   def post_submission_to_tumblr(submission)
     return false if RedditSubmission.exists?(fullname: submission[:fullname]) || @posted_count >= 10
 
-    if submission[:post_type] == "rich:video"
+    if submission[:is_reddit_video_post]
+      res = post_reddit_video_submission_to_tumblr(submission)
+    elsif submission[:post_type] == "rich:video"
       res = post_video_submission_to_tumblr(submission)
     elsif submission[:post_type] == "link" && submission[:is_image_post]
       res = post_photo_submission_to_tumblr(submission)
@@ -172,6 +174,14 @@ class Tumblr::RedditReposter
         reposted_at: Time.now
       )
     end
+  end
+
+  def post_reddit_video_submission_to_tumblr(submission)
+    @tumblr_client.make_video_post(
+      url: submission[:media][:reddit_video][:fallback_url],
+      caption: submission[:caption],
+      tags: submission[:tags]
+    )
   end
 
   def post_video_submission_to_tumblr(submission)
