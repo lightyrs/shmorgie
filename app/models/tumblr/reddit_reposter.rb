@@ -9,13 +9,47 @@ class Tumblr::RedditReposter
   end
 
   def auto_repost!
-    submissions = new_submissions.flatten!.shuffle
+    @submissions = new_submissions.flatten!.shuffle
 
-    calculate_score_threshold(submissions)
+    normalize_scores
+    calculate_score_threshold
 
-    submissions.each do |submission|
+    @posts = @submissions.select do |submission|
       begin
-        if postable?(submission) && post_submission_to_tumblr(submission)
+        postable?(submission)
+      rescue StandardError => e
+        puts "#{e.class}: #{e.message}".inspect.red
+      end
+    end
+
+    calculate_post_stats
+
+    sub_counts = @post_stats[:subreddits].map{|k,v| v}
+    min = sub_counts.min
+    max = sub_counts.max
+    revised_counts = sub_counts.map do |sc|
+      normalize_value(sc, min, max, 1, 5).round
+    end
+
+    revised_posts = []
+
+    puts @post_stats.inspect
+    puts revised_counts.inspect
+
+    @post_stats[:subreddits].each.with_index do |(k,v), i|
+      posts = @posts.select { |post|
+        post[:subreddit] == k
+      }.sort_by { |post|
+        post[:score]
+      }.reverse.first(revised_counts[i])
+      revised_posts.push(posts)
+    end
+
+    @posts = revised_posts.flatten
+
+    @posts.each do |post|
+      begin
+        if post_submission_to_tumblr(post)
           @tumblr_client.increment_todays_post_count!
           @posted_count += 1
         end
@@ -28,6 +62,27 @@ class Tumblr::RedditReposter
   def subreddits
     truemusic = @reddit_client.subreddits_from_multi('zippermouthface', 'truemusic')
     truemusic.push('Frisson').uniq
+  end
+
+  def calculate_post_stats
+    @post_stats ||= {
+      subreddits: post_subreddits,
+      hosts: post_hosts,
+      types: post_reddit_types,
+      scores: @score_stats
+    }
+  end
+
+  def post_subreddits
+    @posts.map{ |p| p[:subreddit] }.inject(Hash.new(0)) { |h, e| h[e] += 1 ; h }.sort_by{ |item| item[1] }.reverse
+  end
+
+  def post_hosts
+    @posts.map { |post| URI.parse(post[:url]).host }.inject(Hash.new(0)) { |h, e| h[e] += 1 ; h }.sort_by{ |item| item[1] }.reverse
+  end
+
+  def post_reddit_types
+    @posts.map { |post| post[:reddit_post_type] }.inject(Hash.new(0)) { |h, e| h[e] += 1 ; h }.sort_by{ |item| item[1] }.reverse
   end
 
   private
@@ -64,13 +119,30 @@ class Tumblr::RedditReposter
   end
 
   def calculate_score_threshold(submissions)
-    @threshold ||= submissions.map { |submission| weighted_score(submission) }.compact.percentile(95)
+    @threshold ||= @normalized_scores.percentile(95)
+  end
+
+  def normalize_scores
+    scores = @submissions.map { |submission| submission[:score].try(:to_f) }
+
+    @score_stats = DescriptiveStatistics::Stats.new(scores)
+    min = @score_stats.min
+    max = @score_stats.max
+    @normalized_scores = scores.map do |score|
+      normalize_value(score, min, max, 1, 1000)
+    end
+  end
+
+  def normalize_value(x, xmin, xmax, ymin, ymax)
+    xrange = xmax - xmin
+    yrange = ymax - ymin
+    ymin + (x - xmin) * (yrange.to_f / xrange)
   end
 
   def postable?(submission)
     @posted_count < 10 &&
     (submission[:media].present? || submission[:is_image_post]) &&
-    weighted_score(submission) >= @threshold
+    submission[:score].try(:to_f) >= @threshold
   end
 
   def post_submission_to_tumblr(submission)
