@@ -24,6 +24,7 @@ class Tumblr::RedditReposter
         puts "#{e.class}: #{e.message}".inspect.red
       end
     end
+    ap @posts.count
 
     calculate_post_stats
 
@@ -31,7 +32,7 @@ class Tumblr::RedditReposter
     min = sub_counts.min
     max = sub_counts.max
     revised_counts = sub_counts.map do |sc|
-      normalize_value(sc, min, max, 1, 10).round
+      normalize_value(sc, min, max, 1, 5).round
     end
 
     revised_posts = []
@@ -132,7 +133,7 @@ class Tumblr::RedditReposter
     min = @score_stats.min
     max = @score_stats.max
     @normalized_scores = scores.map do |score|
-      normalize_value(score, min, max, 1, 1000)
+      normalize_value(score, min, max, 1, 100)
     end
   end
 
