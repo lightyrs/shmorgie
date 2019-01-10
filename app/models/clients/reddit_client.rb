@@ -64,7 +64,7 @@ module Clients
       false
     end
 
-    def is_reddit_video_post(submission)
+    def is_reddit_video_post?(submission)
       submission[:post_hint] == "hosted:video" && submission.media && submission.media[:reddit_video].try(:present?) || false
     rescue StandardError => e
       Rails.logger.error("#{e.class}: #{e.message}")
