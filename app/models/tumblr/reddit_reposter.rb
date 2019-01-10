@@ -149,7 +149,7 @@ class Tumblr::RedditReposter
   end
 
   def post_submission_to_tumblr(submission)
-    return false if RedditSubmission.exists?(fullname: submission[:fullname])
+    return false if RedditSubmission.exists?(fullname: submission[:fullname]) || @posted_count >= 10
 
     if submission[:post_type] == "rich:video"
       res = post_video_submission_to_tumblr(submission)
