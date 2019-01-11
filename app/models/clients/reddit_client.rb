@@ -46,6 +46,7 @@ module Clients
         media: submission.try(:media),
         is_image_post: is_image_post?(submission),
         is_reddit_video_post: is_reddit_video_post?(submission),
+        is_youtube_post: is_youtube_post?(submission),
         score: submission.score.try(:to_f),
         title: submission.title,
         tags: [map_domain(submission.try(:domain)).try(:downcase), submission.subreddit, "reddit"].compact,
@@ -65,10 +66,14 @@ module Clients
     end
 
     def is_reddit_video_post?(submission)
-      submission[:post_hint] == "hosted:video" && submission.media && submission.media[:reddit_video].try(:present?) || false
+      submission.try(:post_hint) == "hosted:video" && submission.media && submission.media[:reddit_video].try(:present?) || false
     rescue StandardError => e
       Rails.logger.error("#{e.class}: #{e.message}")
       false
+    end
+
+    def is_youtube_post?(submission)
+      submission.media && submission.media[:type] && !!submission.media[:type].match(/youtube/i)
     end
 
     def composed_attribution(submission)

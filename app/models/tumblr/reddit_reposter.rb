@@ -152,7 +152,7 @@ class Tumblr::RedditReposter
 
     if submission[:is_reddit_video_post]
       res = post_reddit_video_submission_to_tumblr(submission)
-    elsif submission[:post_type] == "rich:video"
+    elsif submission[:post_type] == "rich:video" || submission[:is_youtube_post]
       res = post_video_submission_to_tumblr(submission)
     elsif submission[:post_type] == "link" && submission[:is_image_post]
       res = post_photo_submission_to_tumblr(submission)
