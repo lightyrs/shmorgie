@@ -10,8 +10,22 @@
     %meta{charset: "utf-8"}/
     %meta{content: "IE=edge", "http-equiv" => "X-UA-Compatible"}/
     %meta{content: "width=device-width, initial-scale=1, shrink-to-fit=no", name: "viewport"}/
+    / Primary Meta Tags
     %title Harris Novick
-    %meta{name: "description", content: "The personal homepage of Harris Novick. Writing software, writing songs, building products and companies, meeting new people and learning new skills; staying interested and vital above most else."}/
+    %meta{:content => "Harris Novick", :name => "title"}/
+    %meta{:content => "The personal homepage of Harris Novick. Writing software, writing songs, building products and companies, meeting new people and learning new skills; staying interested and vital above most else.", :name => "description"}/
+    / Open Graph / Facebook
+    %meta{:content => "website", :property => "og:type"}/
+    %meta{:content => "https://harrisnovick.com/", :property => "og:url"}/
+    %meta{:content => "Harris Novick", :property => "og:title"}/
+    %meta{:content => "The personal homepage of Harris Novick. Writing software, writing songs, building products and companies, meeting new people and learning new skills; staying interested and vital above most else.", :property => "og:description"}/
+    %meta{:content => "https://i.imgur.com/Jyg37Bk.gif", :property => "og:image"}/
+    / Twitter
+    %meta{:content => "summary_large_image", :property => "twitter:card"}/
+    %meta{:content => "https://harrisnovick.com/", :property => "twitter:url"}/
+    %meta{:content => "Harris Novick", :property => "twitter:title"}/
+    %meta{:content => "The personal homepage of Harris Novick. Writing software, writing songs, building products and companies, meeting new people and learning new skills; staying interested and vital above most else.", :property => "twitter:description"}/
+    %meta{:content => "https://i.imgur.com/Jyg37Bk.gif", :property => "twitter:image"}/
     = stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => true
     = csrf_meta_tags
   %body
