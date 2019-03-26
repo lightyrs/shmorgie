@@ -1,3 +1,14 @@
+$backgrounds: (
+  "#a18cd1": linear-gradient(to top, #a18cd1 0%, #fbc2eb 100%),
+  "#f5576c": linear-gradient(120deg, #f093fb 0%, #f5576c 100%),
+  "#4facfe": linear-gradient(to right, #4facfe 0%, #00f2fe 100%),
+  "#ff0844": linear-gradient(to top, #ff0844 0%, #ffb199 100%),
+  "#ff758c": linear-gradient(to right, #ff758c 0%, #ff7eb3 100%),
+  "#48c6ef": linear-gradient(to top, #48c6ef 0%, #6f86d6 100%),
+  "#f77062": linear-gradient(to top, #f77062 0%, #fe5196 100%),
+  "#9be15d": linear-gradient(to top, #9be15d 0%, #00e3ae 100%)
+);
+
 @font-face {
   font-family: 'House Slant';
   src: local('HouseSlant-Regular'),
@@ -17,12 +28,25 @@ body {
 }
 
 h1 {
+  background-clip: text;
+  background-color: transparent;
   color: #f63939;
   font-family: "House Slant";
   line-height: 1em;
   -webkit-font-smoothing: antialiased;
+  -webkit-text-fill-color: transparent;
   @include poly-fluid-sizing('padding-top', (320px: 42px, 768px: 54px, 1280px: 66px, 1460px: 80px));
   @include poly-fluid-sizing('font-size', (320px: 124px, 768px: 191px));
+}
+
+@each $color, $gradient in $backgrounds {
+  $index: index(($backgrounds), ($color $gradient));
+  h1.v#{$index} {
+    background-image: $gradient;
+  }
+  .social-links.v#{$index} path {
+    fill: #{$color};
+  }
 }
 
 #hdn_outer {
