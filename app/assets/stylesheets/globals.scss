@@ -44,7 +44,7 @@ h1 {
   h1.v#{$index} {
     background-image: $gradient;
   }
-  .social-links.v#{$index} path {
+  .sl.v#{$index} path {
     fill: #{$color};
   }
 }
