@@ -182,6 +182,7 @@ GEM
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
     net-ssh (3.0.2)
+    nio4r (2.3.1)
     nokogiri (1.6.8.1)
       mini_portile2 (~> 2.1.0)
     oauth (0.4.7)
@@ -225,7 +226,8 @@ GEM
     pry-rescue (1.4.2)
       interception (>= 0.5)
       pry
-    puma (2.12.2)
+    puma (4.3.12)
+      nio4r (~> 2.0)
     quiet_assets (1.1.0)
       railties (>= 3.1, < 5.0)
     rack (1.6.10)
